@@ -1,121 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useCallback } from 'react';
+import _ from 'lodash';
+import './App.css';
+
+const russianLanguageQuotes = [
+  'Дивишься драгоценности нашего языка: что ни звук, то и подарок; всё зернисто, крупно, как сам жемчуг.',
+  'Русский язык в умелых руках и в опытных устах — красив, певуч, выразителен, гибок, послушен, ловок.',
+  'Русский язык неисчерпаемо богат и всё обогащается с быстротой поражающей.',
+  'Русский язык открывается до конца в своих поистине волшебных свойствах лишь тому, кто любит свой народ.',
+  'Язык народа — лучший, никогда не увядающий цвет всей его духовной жизни.',
+  'Нет таких звуков, красок, образов и мыслей — сложных и простых, — для которых не нашлось бы выражения.',
+  'Наш язык мудр: между выражением «я убеждён» и «я убедился» — большая разница.',
+  'О великий, могучий, правдивый и свободный русский язык!',
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [quote, setQuote] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [author, setAuthor] = useState('');
+
+  const authors = ['Н.В. Гоголь', 'А.И. Куприн', 'М. Горький', 'К.Г. Паустовский', 'К.Д. Ушинский'];
+
+  const getRandomQuote = useCallback(() => {
+    const newQuote = {
+      id: Date.now(),
+      text: _.sample(russianLanguageQuotes),
+    };
+    const randomAuthor = _.sample(authors);
+    
+    setQuote(newQuote);
+    setAuthor(randomAuthor);
+    setHistory(prev => [newQuote, ...prev.slice(0, 4)]);
+  }, []);
+
+  const clearHistory = () => {
+    setHistory([]);
+    setQuote(null);
+    setAuthor('');
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="App">
+      <header className="App-header">
+        <h1>🇷🇺 Великие цитаты о русском языке</h1>
+        <p>Мудрость классиков о нашем великом и могучем</p>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="quote-container">
+        {!quote ? (
+          <div className="welcome">
+            <div className="language-emoji">📖</div>
+            <button onClick={getRandomQuote} className="primary-btn">
+              Получить цитату
+            </button>
+          </div>
+        ) : (
+          <>
+            <blockquote className="quote">
+              <q>{quote.text}</q>
+              <cite>— {author}</cite>
+            </blockquote>
+            <div className="actions">
+              <button onClick={getRandomQuote} className="primary-btn">
+                Новая цитата
+              </button>
+              <button onClick={clearHistory} className="secondary-btn">
+                Очистить
+              </button>
+            </div>
+          </>
+        )}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {history.length > 0 && (
+          <section className="history">
+            <h3>📜 История:</h3>
+            <ul>
+              {history.map((item) => (
+                <li key={item.id} className="history-item">
+                  {item.text}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <footer>
+        <p>Powered by <strong>lodash</strong> • {history.length} цитат показано</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
