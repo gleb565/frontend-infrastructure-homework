@@ -1,21 +1,24 @@
 {
-  "name": "---------",
+  "name": "frontend-infrastructure-homework",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://gleb565.github.io/frontend-infrastructure-homework",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "cp tools/githooks/* .git/hooks || true"
+    "postinstall": "cp tools/githooks/* .git/hooks || true",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json,md}": "prettier --write"
+    "*.json": "prettier --write"
   },
   "dependencies": {
     "lodash": "^4.17.23",
@@ -34,6 +37,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "gh-pages": "^6.3.0",
     "globals": "^17.4.0",
     "lint-staged": "^16.3.3",
     "prettier": "^3.8.1",
